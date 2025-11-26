@@ -445,6 +445,23 @@
             const durationEl = document.getElementById('duration');
             const albumArt = document.getElementById('albumArt');
 
+            // Media Session API setup
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: '最大公約数',
+                    artist: 'RADWIMPS',
+                    album: '最大公約数',
+                    artwork: [
+                        { src: 'https://gcd.btm-m.site/cover.jpg', sizes: '512x512', type: 'image/jpeg' }
+                    ]
+                });
+
+                navigator.mediaSession.setActionHandler('play', () => audio.play());
+                navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+                navigator.mediaSession.setActionHandler('seekbackward', () => audio.currentTime = Math.max(0, audio.currentTime - 10));
+                navigator.mediaSession.setActionHandler('seekforward', () => audio.currentTime = Math.min(audio.duration, audio.currentTime + 10));
+            }
+
             function togglePlay() {
                 if (audio.paused) {
                     audio.play().catch(e => console.log('Playback error:', e));
